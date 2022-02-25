@@ -1,0 +1,41 @@
+:host ::ng-deep .p-cell-editing {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.sections {
+  padding-top: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+
+  .items-header {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+}
+
+.footer {
+  padding: 2rem;
+  display: flex;
+  justify-content: end;
+}
+
+i {
+  font-size: 2rem;
+  margin-top: 0.5rem;
+}
+
+p-table {
+  width: 100%;
+  .none-events {
+    pointer-events: none;
+  }
+}
+
+button {
+  margin: 0.5rem;
+}

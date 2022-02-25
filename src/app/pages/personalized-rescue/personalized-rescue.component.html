@@ -1,0 +1,94 @@
+
+<p-fieldset legend="Dados do Investimento">
+  <div class="row">
+    <div class="items-header">
+      <i *ngIf="this.loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <i *ngIf="!this.loading" class="pi pi-user"></i>
+      <div *ngIf="!this.loading" style="display: grid; margin-left: 1rem;">
+          <label>Nome</label>
+          {{ investiment?.nome }}
+      </div>
+    </div>
+
+    <p-divider layout="vertical"></p-divider>
+
+    <div class="items-header">
+      <i *ngIf="this.loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <i *ngIf="!this.loading" class="pi pi-chart-line"></i>
+      <div *ngIf="!this.loading" style="display: grid; margin-left: 1rem;">
+          <label>Objetivo</label>
+          {{ investiment.objetivo }}
+      </div>
+    </div>
+
+    <p-divider layout="vertical"></p-divider>
+
+    <div class="items-header">
+      <i *ngIf="this.loading" class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <i *ngIf="!this.loading" class="pi pi-dollar"></i>
+      <div *ngIf="!this.loading" style="display: grid; margin-left: 1rem;">
+          <label>Saldo Total</label>
+          {{ investiment.saldoTotal | currency:'BRL' }}
+      </div>
+    </div>
+  </div>
+</p-fieldset>
+
+<br>
+
+<p-fieldset legend="Resgate" editMode="row">
+  <div class="row">
+    <p-table editMode="row" dataKey="id" [lazy]="true" [loading]="this.loading" [value]="investiment.acoes">
+      <ng-template pTemplate="header">
+          <tr>
+              <th class="titles">Ação</th>
+              <th class="titles">Saldo Acumulado</th>
+              <th class="titles">Valor a resgatar</th>
+              <th style="width:8rem"></th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-acao let-editing="editing" let-ri="rowIndex">
+          <tr [pEditableRow]="acao">
+              <td>{{ acao.nome }}</td>
+              <td>{{ (this.investiment.saldoTotal * acao.percentual) / 100 | currency:'BRL' }}</td>
+              <td [ngClass]="{'none-events': editing === false}" pEditableColumn>
+                <label *ngIf="!editing && !acao.valorResgatado">Sem valor</label>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-inputNumber
+                      [(ngModel)]="acao.valorResgatado"
+                      mode="currency"
+                      currency="BRL"
+                      [min]="0"
+                      placeholder="Digite o valor a resgatar"
+                      (onInput)="this.setMessage($event.value, acao.percentual)"
+                      [max]="(this.investiment.saldoTotal * acao.percentual) / 100">
+                    </p-inputNumber>
+                    <p-message *ngIf="this.message" severity="error" text="Valor não pode ser maior que o saldo acumulado"></p-message>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ acao.valorResgatado | currency:'BRL' }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="row">
+                <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(acao)" class="p-button-rounded p-button-text"></button>
+                <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(acao)" class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
+                <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(acao, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+            </td>
+          </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-fieldset>
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+
+<div class="footer">
+  <div class="row">
+    <button pButton type="button" label="Cancelar" class="p-button-outlined p-button-secondary" routerLink="/">
+    </button>
+    <button pButton type="button" label="Confirmar Resgate" class="p-button-raised p-button-secondary" (click)="this.confirm()">
+    </button>
+  </div>
+</div>

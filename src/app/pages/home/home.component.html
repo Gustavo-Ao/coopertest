@@ -1,0 +1,19 @@
+<p-fieldset legend="Dados do Investimento">
+  <p-table [lazy]="true" [loading]="isLoading" responsiveLayout="scroll" selectionMode="single" [value]="investiments">
+      <ng-template pTemplate="header" let-columns>
+          <tr>
+              <th>Nome</th>
+              <th>Objetivo</th>
+              <th>Saldo Total</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-investiment let-columns="columns">
+          <tr [ngClass]="{'disable-row': investiment.indicadorCarencia === 'S'}"
+            [pSelectableRow]="investiment" (click)="this.selecInvestiment(investiment)">
+              <td>{{investiment.nome}}</td>
+              <td>{{investiment.objetivo}}</td>
+              <td>{{investiment.saldoTotal | currency:'BRL'}}</td>
+          </tr>
+      </ng-template>
+  </p-table>
+</p-fieldset>
